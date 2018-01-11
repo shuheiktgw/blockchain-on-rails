@@ -1,4 +1,5 @@
 require 'date'
+require 'digest/sha2'
 
 class Blockchain
 
@@ -36,17 +37,23 @@ class Blockchain
     last_block.index
   end
 
-  def compute_hash(_block)
-  end
-
   def last_block
     chain[-1]
   end
 
   private
 
-  Transaction = Struct.new(:sender, :recipient, :amount)
-  Block = Struct.new(:index, :timestamp, :current_transactions, :proof, :previous_hash)
+  Transaction = Struct.new(:sender, :recipient, :amount) do
+    def to_s
+      "{ sender: #{ sender.to_s }, recipient: #{ recipient.to_s }, amount: #{ amount.to_s } }"
+    end
+  end
+
+  Block = Struct.new(:index, :timestamp, :current_transactions, :proof, :previous_hash) do
+    def to_s
+      "{ index: #{ index.to_s }, timestamp: #{ timestamp.to_s }, current_transactions: #{ current_transactions.map(&:to_s).to_s }, proof: #{ proof.to_s }, previous_hash: #{ previous_hash.to_s } }"
+    end
+  end
 
   def create_transaction(sender:, recipient:, amount:)
     Transaction.new(sender, recipient, amount)
@@ -60,5 +67,12 @@ class Blockchain
       proof,
       previous_hash || compute_hash(last_block)
     )
+  end
+
+  # Creates a SHA-256 hash of a Block
+  # @param   block: <dict> Block
+  # @return  <str> a SHA-256 hash of a Block
+  def compute_hash(block)
+    Digest::SHA256.hexdigest(block.to_s)
   end
 end
