@@ -8,6 +8,9 @@ class Blockchain
   def initialize
     @chain = []
     @current_transactions = []
+
+    # Create the genesis block
+    append_block(proof: 100, previous_hash: 1)
   end
 
   # Create a new Block in the Blockchain
