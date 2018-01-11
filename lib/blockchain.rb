@@ -1,18 +1,26 @@
+require 'date'
+
 class Blockchain
 
-  attr_accessor :chain, :transactions
+  attr_accessor :chain, :current_transactions
 
   def initialize
     @chain = []
-    @transactions = []
+    @current_transactions = []
   end
 
   # Create a new Block in the Blockchain
   # @param proof: <int> The proof given by the Proof of Work algorithm
   # @param previous_hash: (Optional) <str> Hash of previous Block
   # @return <Block> New Block
-  def create_block(proof:, previous_hash: nil)
+  def append_block(proof:, previous_hash: nil)
+    block = create_block(proof: proof, previous_hash: previous_hash)
+    chain.push(block)
 
+    # reset the current list of transactions
+    @current_transactions = []
+
+    block
   end
 
   # Creates a new transaction to go into the next mined Block
@@ -22,13 +30,13 @@ class Blockchain
   # @param  amount: <int> Amount
   # @return <int> The index of the Block that will hold this transaction
   def append_transaction(sender:, recipient:, amount:)
-    tr = create_transaction(sender: sender, recipient: recipient, amount: amount)
-    transactions.push(tr)
+    transaction = create_transaction(sender: sender, recipient: recipient, amount: amount)
+    current_transactions.push(transaction)
 
     last_block.index
   end
 
-  def hash(_block)
+  def compute_hash(_block)
   end
 
   def last_block
@@ -38,8 +46,19 @@ class Blockchain
   private
 
   Transaction = Struct.new(:sender, :recipient, :amount)
+  Block = Struct.new(:index, :timestamp, :current_transactions, :proof, :previous_hash)
 
   def create_transaction(sender:, recipient:, amount:)
     Transaction.new(sender, recipient, amount)
+  end
+
+  def create_block(proof:, previous_hash:)
+    Block.new(
+      chain.length,
+      Time.now.to_i,
+      current_transactions,
+      proof,
+      previous_hash || compute_hash(last_block)
+    )
   end
 end
