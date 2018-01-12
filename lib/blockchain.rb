@@ -5,6 +5,8 @@ class Blockchain
 
   attr_accessor :chain, :current_transactions
 
+  CORRECT_LAST_4_DIGITS = '0000'
+
   def initialize
     @chain = []
     @current_transactions = []
@@ -14,6 +16,7 @@ class Blockchain
   end
 
   # Create a new Block in the Blockchain
+  #
   # @param proof: <int> The proof given by the Proof of Work algorithm
   # @param previous_hash: (Optional) <str> Hash of previous Block
   # @return <Block> New Block
@@ -72,10 +75,21 @@ class Blockchain
     )
   end
 
-  # Creates a SHA-256 hash of a Block
-  # @param   block: <dict> Block
-  # @return  <str> a SHA-256 hash of a Block
-  def compute_hash(block)
-    Digest::SHA256.hexdigest(block.to_s)
+  # Creates a SHA-256 hash of a given string
+  #
+  # @param   obj: <object> any object implemented to_s method
+  # @return  <str> a SHA-256 hash of a object
+  def compute_hash(obj)
+    Digest::SHA256.hexdigest(obj.to_s)
+  end
+
+  # Validates the Proof: Does compute_hash(last_proof, proof) contain 4 leading zeroes?
+  #
+  # @param last_proof: <int> Previous Proof
+  # @param proof:      <int> Current Proof
+  # @return: <bool> True if correct, False if not.
+  def valid_proof?(last_proof:, proof:)
+    guess_hash = compute_hash(last_proof.to_s + proof.to_s)
+    guess_hash[-4..-1] == CORRECT_LAST_4_DIGITS
   end
 end
