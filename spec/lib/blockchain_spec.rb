@@ -15,6 +15,27 @@ describe Blockchain do
 
   describe '#append_transaction' do
     subject(:index){ blockchain.append_transaction(sender: sender, recipient: recipient, amount: amount) }
+    subject(:transactions){ blockchain.current_transactions }
+
+    let(:sender) { 'sender1111' }
+    let(:recipient) { 'recipient2222' }
+    let(:amount) { 100 }
+
+    it 'returns current index' do
+      expect(index).to eq 0
+    end
+
+    it 'appends a new transaction' do
+      index
+      expect(transactions.length).to eq 1
+      expect(transactions.first.sender).to eq 'sender1111'
+      expect(transactions.first.recipient).to eq 'recipient2222'
+      expect(transactions.first.amount).to eq 100
+    end
+  end
+
+  describe '#append_block' do
+    subject(:index){ blockchain.append_transaction(sender: sender, recipient: recipient, amount: amount) }
 
     let(:sender) { 'sender1111' }
     let(:recipient) { 'recipient2222' }
