@@ -5,7 +5,7 @@ describe Blockchain do
 
   describe '#new' do
     subject{ blockchain.last_block }
-    it 'appends genesis block' do
+    it 'appends a genesis block' do
       expect(subject.index).to eq (0)
       expect(subject.current_transactions).to be_empty
       expect(subject.proof).to eq 100
@@ -26,23 +26,24 @@ describe Blockchain do
     end
 
     it 'appends a new transaction' do
-      index
-      expect(transactions.length).to eq 1
-      expect(transactions.first.sender).to eq 'sender1111'
-      expect(transactions.first.recipient).to eq 'recipient2222'
-      expect(transactions.first.amount).to eq 100
+      expect{ index }.to change{ transactions.length }.from(0).to(1)
     end
   end
 
   describe '#append_block' do
-    subject(:index){ blockchain.append_transaction(sender: sender, recipient: recipient, amount: amount) }
+    subject(:block){ blockchain.append_block(proof: proof, previous_hash: previous_hash) }
+    subject(:chain){ blockchain.chain }
 
-    let(:sender) { 'sender1111' }
-    let(:recipient) { 'recipient2222' }
-    let(:amount) { 100 }
+    let(:proof) { 12345 }
+    let(:previous_hash) { 2 }
 
-    it 'returns current index' do
-      is_expected.to eq 0
+    it 'returns a new block' do
+      expect(block.proof).to eq 12345
+      expect(block.previous_hash).to eq 2
+    end
+
+    it 'appends a new block' do
+      expect{ block }.to change{ chain.length }.from(1).to(2)
     end
   end
 end
