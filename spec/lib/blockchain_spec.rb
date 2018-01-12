@@ -20,6 +20,8 @@ describe Blockchain do
     let(:recipient) { 'recipient2222' }
     let(:amount) { 100 }
 
-
+    it 'returns current index' do
+      is_expected.to eq 0
+    end
   end
 end
