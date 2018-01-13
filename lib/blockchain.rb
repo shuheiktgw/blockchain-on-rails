@@ -49,7 +49,13 @@ class Blockchain
   #
   # @param last_proof: <int>
   # @return: <int>
-  def compute_proof_of_work(last_poof)
+  def compute_proof_of_work(last_proof)
+    proof = 0
+    until valid_proof?(last_proof: last_proof, proof: proof)
+      proof += 1
+    end
+
+    proof
   end
 
   def last_block

@@ -48,7 +48,7 @@ describe Blockchain do
     end
   end
 
-  describe '#prrof_of_work' do
+  describe '#compute_proof_of_work' do
     subject(:proof_of_work){ blockchain.compute_proof_of_work(last_proof) }
     subject(:result_hash) { Digest::SHA256.hexdigest(last_proof.to_s + proof_of_work.to_s) }
 
