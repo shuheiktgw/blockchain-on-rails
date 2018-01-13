@@ -43,6 +43,15 @@ class Blockchain
     last_block.index
   end
 
+  # Simple Proof of Work Algorithm:
+  # Find a number p' such that compute_hash(pp') contains leading 4 zeroes, where p is the previous p'
+  # p is the previous proof, and p' is the new proof
+  #
+  # @param last_proof: <int>
+  # @return: <int>
+  def compute_proof_of_work(last_poof)
+  end
+
   def last_block
     chain[-1]
   end
