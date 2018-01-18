@@ -7,6 +7,16 @@ class Blockchain
 
   CORRECT_LAST_4_DIGITS = '0000'
 
+  class << self
+    # Creates a SHA-256 hash of a given string
+    #
+    # @param   obj: <object> any object implemented to_s method
+    # @return  <str> a SHA-256 hash of a object
+    def compute_hash(obj)
+      Digest::SHA256.hexdigest(obj.to_s)
+    end
+  end
+
   def initialize
     @chain = []
     @current_transactions = []
@@ -38,14 +48,6 @@ class Blockchain
       proof,
       previous_hash || compute_hash(last_block)
     )
-  end
-
-  # Creates a SHA-256 hash of a given string
-  #
-  # @param   obj: <object> any object implemented to_s method
-  # @return  <str> a SHA-256 hash of a object
-  def compute_hash(obj)
-    Digest::SHA256.hexdigest(obj.to_s)
   end
 
   # Validates the Proof: Does compute_hash(last_proof, proof) contain 4 leading zeroes?

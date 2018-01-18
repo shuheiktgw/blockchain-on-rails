@@ -7,7 +7,13 @@ class Block < ApplicationRecord
   # @param previous_hash: (Optional) <str> Hash of previous Block
   # @return <Block> New Block
   def self.append_block(proof:, previous_hash: nil)
+    hash =  if previous_hash
+      previous_hash
+    else
+      json = BlockSerializer.new(Block.last).to_json
+      Blockchain.compute_hash(json)
+    end
 
-    # self.create!(proof: proof, previous_hash: previous_hash || Blockchain.compute_)
+    create!(proof: proof, previous_hash: hash)
   end
 end
