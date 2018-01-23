@@ -1,0 +1,13 @@
+<% @chain.each do |block| %>
+  <p>Block</p>
+  <%= block.id %>
+  <%= block.proof %>
+  <%= block.previous_hash %>
+  <% block.transactions.each do |transaction| %>
+  <p>Transaction</p>
+    <%= transaction.id %>
+    <%= transaction.sender %>
+    <%= transaction.recipient %>
+    <%= transaction.amount %>
+  <% end %>
+<% end %>
